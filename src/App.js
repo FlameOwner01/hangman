@@ -13,6 +13,7 @@ import Popup from './components/Popup';
 import Notification from './components/Notification';
 import { showNotification as show, checkWin } from './helpers/helpers';
 import WrongLetters from "./components/WrongLetters";
+import Word from "./components/Word";
 
 const imgStyle = {
   display: "inline-block",
@@ -26,8 +27,9 @@ const imgStyle = {
 let answer =  randomWord();
 
 function App() {
+  
   let imgs = [image1, image2, image3, image4, image5, image6, image7];
-  const [current, setCurrent] = useState(imgs[0]);
+  const [current, setCurrent] = useState(0);
   const [playable, setPlayable] = useState(true);
   const [correctLetters, setCorrectLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([]);
@@ -48,6 +50,7 @@ function App() {
         } else {
           if (!wrongLetters.includes(letter)) {
             setWrongLetters(currentLetters => [...currentLetters, letter]);
+            setCurrent(current+1);
           } else {
             show(setShowNotification);
           }
@@ -66,6 +69,7 @@ const playAgain = () => {
     setWrongLetters([]);
 
     answer = randomWord();
+    setCurrent(0);
   }
 
   return (
@@ -74,7 +78,8 @@ const playAgain = () => {
       <WrongLetters 
       wrongLetters={wrongLetters}
       />
-      <img src={current} alt={imgs.length} style={imgStyle} />
+      <Word answer={answer} correctLetters={correctLetters} />
+      <img src={imgs[current]} alt={imgs.length} className="hangman"/>
       <Popup correctLetters={correctLetters} wrongLetters={wrongLetters} answer={answer} setPlayable={setPlayable} playAgain={playAgain} />
       <Notification showNotification={showNotification} />
     </div>
